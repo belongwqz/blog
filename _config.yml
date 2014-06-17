@@ -5,12 +5,13 @@ paginate: 8
 
 safe: false
 baseurl: /emotion
+BASE_PATH: /emotion
 #站点基础配置
 title: emotion
 subTitle: belongwqz blog.
 description: 简简单单
 url: http://belongwqz.github.io
-feed: /atom.xml
+feed: /emotion/atom.xml
 
 #菜单配置
 nav:
@@ -23,7 +24,7 @@ nav:
   - text: 联系我
     url: http://www.zhanxin.info/contact.html
   - text: 博客源代码
-    url: https://github.com/pizn/pizn.github.com
+    url: https://github.com/belongwqz/emotion
 
 #theme config
 themes: /emotion/themes/violet
