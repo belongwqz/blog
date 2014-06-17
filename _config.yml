@@ -5,7 +5,6 @@ paginate: 8
 
 safe: false
 baseurl: /emotion
-BASE_PATH: /emotion
 #站点基础配置
 title: emotion
 subTitle: belongwqz blog.
