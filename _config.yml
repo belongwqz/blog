@@ -16,11 +16,11 @@ feed: /atom.xml
 #菜单配置
 nav:
   - text: 首页
-    url: /index.html
+    url: /emotion/index.html
   - text: 文章归档
-    url: /archives.html
+    url: /emotion/archives.html
   - text: 作品
-    url: /works.html
+    url: /emotion/works.html
   - text: 联系我
     url: http://www.zhanxin.info/contact.html
   - text: 博客源代码
