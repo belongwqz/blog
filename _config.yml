@@ -1,17 +1,17 @@
 markdown: rdiscount
 pygments: true
-plugins: ./_plugins
+plugins: ./emotion/_plugins
 paginate: 8
 
 safe: false
 baseurl: /emotion
 BASE_PATH : /emotion
 #站点基础配置
-title: Violet
-subTitle: Just another Jekyll blog.
-description: 这是 PIZn 的又一个博客，它是基于 Jekyll 搭建起来的。在这里，不仅仅是用来快速记录工作，学习，生活的一点一滴的地方，更是 PIZn 对 Jekyll 的学习和使用的一次有意义的实践。
+title: emotion
+subTitle: belongwqz blog.
+description: 简单点
 url: http://belongwqz.github.io
-feed: /atom.xml
+feed: /emotion/atom.xml
 
 #菜单配置
 nav:
@@ -27,14 +27,14 @@ nav:
     url: https://github.com/pizn/pizn.github.com
 
 #theme config
-themes: /themes/violet
+themes: /emotion/themes/violet
 
 #配置你喜欢的顶部背景图片
 headimg:
-  - item: /themes/violet/images/hdbg01.jpg
-  - item: /themes/violet/images/hdbg02.jpg
-  - item: /themes/violet/images/hdbg03.jpg
-  - item: /themes/violet/images/hdbg04.jpg
+  - item: /emotion/themes/violet/images/hdbg01.jpg
+  - item: /emotion/themes/violet/images/hdbg02.jpg
+  - item: /emotion/themes/violet/images/hdbg03.jpg
+  - item: /emotion/themes/violet/images/hdbg04.jpg
 
 #关注我
 follow:
