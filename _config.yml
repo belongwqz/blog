@@ -63,7 +63,7 @@ author:
 #评论信息
 disqus:
   config: true
-  id: piznblog
+  id: belongwqz
 
 duoshuo:
   config: false
