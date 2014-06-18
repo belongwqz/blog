@@ -6,7 +6,7 @@ paginate: 8
 safe: false
 baseurl: /blog
 #站点基础配置
-title: blog
+title: 飞浪的博客
 subTitle: belongwqz blog.
 description: 简简单单
 url: http://belongwqz.github.io
