@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 又一次变更
+title: 经过艰难修改，博客开通咯
 description: 人，最难超越的，不是别人，是自己。
 
 ---
