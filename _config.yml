@@ -1,39 +1,39 @@
 markdown: rdiscount
 highlighter: true
-plugins: ./emotion/_plugins
+plugins: ./blog/_plugins
 paginate: 8
 
 safe: false
-baseurl: /emotion
+baseurl: /blog
 #站点基础配置
-title: emotion
+title: blog
 subTitle: belongwqz blog.
 description: 简简单单
 url: http://belongwqz.github.io
-feed: /emotion/atom.xml
+feed: /blog/atom.xml
 
 #菜单配置
 nav:
   - text: 首页
-    url: /emotion/index.html
+    url: /blog/index.html
   - text: 文章归档
-    url: /emotion/archives.html
+    url: /blog/archives.html
   - text: 作品
-    url: /emotion/works.html
+    url: /blog/works.html
   - text: 联系我
     url: http://www.zhanxin.info/contact.html
   - text: 博客源代码
-    url: https://github.com/belongwqz/emotion
+    url: https://github.com/belongwqz/blog
 
 #theme config
-themes: /emotion/themes/violet
+themes: /blog/themes/violet
 
 #配置你喜欢的顶部背景图片
 headimg:
-  - item: /emotion/themes/violet/images/hdbg01.jpg
-  - item: /emotion/themes/violet/images/hdbg02.jpg
-  - item: /emotion/themes/violet/images/hdbg03.jpg
-  - item: /emotion/themes/violet/images/hdbg04.jpg
+  - item: /blog/themes/violet/images/hdbg01.jpg
+  - item: /blog/themes/violet/images/hdbg02.jpg
+  - item: /blog/themes/violet/images/hdbg03.jpg
+  - item: /blog/themes/violet/images/hdbg04.jpg
 
 #关注我
 follow:
