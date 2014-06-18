@@ -12,7 +12,7 @@ isArchive: true
     <div class="violet-post">
         <div class="main-article-contant">
 
-            {% capture post_year1 %}{{ 'now' | date: '%Y' }}{% endcapture %}
+            {% capture post_year1 %}{{ '现在' | date: '%Y' }}{% endcapture %}
             <h3>{{ post_year1 }}</h3>
             <ul class="article-year fn-clear">
                 {% for post in site.posts %}
