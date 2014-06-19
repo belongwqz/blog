@@ -7,7 +7,7 @@ safe: false
 baseurl: /blog
 #站点基础配置
 title: Beautiful
-subTitle: 一切都是最好的选择
+subTitle: Something never changes, but something does.
 description: 简简单单
 url: http://belongwqz.github.io
 feed: /blog/atom.xml
