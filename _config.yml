@@ -16,9 +16,9 @@ feed: /blog/atom.xml
 nav:
   - text: 首页
     url: /blog/index.html
-  - text: 文章归档
+  - text: 归档
     url: /blog/archives.html
-  - text: 作品
+  - text: 记忆
     url: /blog/works.html
   - text: 联系我
     url: http://belongwqz.github.io/blog/contact.html
