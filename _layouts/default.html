@@ -45,7 +45,7 @@
                       {% assign active = 'nav-item-active' %}
                     {% endif %}
                     <li class="nav-item {{ active }}">
-                        <a href="{{ link.url }}">
+                        <a href="{{ site.baseurl }}{{ link.url }}">
                             {{ link.text }}
                         </a>
                         {{ indicator }}
@@ -66,19 +66,19 @@
                     {% for link in site.follow %}
                     <a class="follow" href="{{ link.url }}" target="_blank"><i class="fa {{ link.class }}"></i></a>
                     {% endfor %}
-                    <p class="text">© belongwqz to wqz <a href="{{ site.url }}{{ site.themes }}/contact.html">wqz</a></p>
+                    <p class="text">© belongwqz to wqz <a href="{{ site.baseurl }}{{ site.themes }}/contact.html">wqz</a></p>
                 </div>
             </div>
         </footer>
     </div>
 
-    <script type="text/javascript" src="{{ site.url }}{{ site.themes }}/js/jquery-1.8.3.js"></script>
-    <script type="text/javascript" src="{{ site.url }}{{ site.themes }}/js/jquery-scrollTo.js"></script>
-    <script type="text/javascript" src="{{ site.url }}{{ site.themes }}/js/common.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}{{ site.themes }}/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}{{ site.themes }}/js/jquery-scrollTo.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}{{ site.themes }}/js/common.js"></script>
     <script type="text/javascript">
         var headImgArr = [];
         {% for imgsrc in site.headimg %}
-            headImgArr.push("{{ imgsrc.item }}");
+            headImgArr.push("{{ site.baseurl }}{{ imgsrc.item }}");
         {% endfor %}
         if(headImgArr.length <= 0) {
             headImgArr = ["/themes/violet/images/hdbg03.jpg"];
