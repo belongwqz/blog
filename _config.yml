@@ -24,7 +24,7 @@ nav:
     url: /contact.html
 
 #theme config
-themes: /blog/themes/violet
+themes: /themes/violet
 
 #memory
 mem:
