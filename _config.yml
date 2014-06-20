@@ -19,7 +19,7 @@ nav:
   - text: 归档
     url: /blog/archives.html
   - text: 记忆
-    url: /blog/works.html
+    url: /blog/memory.html
   - text: 联系我
     url: /blog/contact.html
   #- text: 博客源代码
