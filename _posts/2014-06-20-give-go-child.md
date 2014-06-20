@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 送给孩子的九封信
-description: 每个人都是孩子，都有孩子，都需要学习。
+description: 送给我那即将来到这世界的孩儿。
 
 ---
 
