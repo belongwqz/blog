@@ -104,7 +104,7 @@
         </script>
         {% else %}
             {% if site.duoshuo.config %}
-            <div class="ds-thread" data-thread-key="{{ site.duoshuo.id }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ site.baseurl }}{{ page.url }}"></div>
+            <div class="ds-thread" data-thread-key="{{ site.duoshuo.id }}" data-title="{{ page.title }}" data-url="{{ page.url }}"></div>
             <script type="text/javascript">
                 var duoshuoQuery = {short_name:"{{ site.duoshuo.id }}"};
                 (function() {
