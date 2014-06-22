@@ -35,9 +35,15 @@ mem:
     w: 335
     h: 539
   - img: images/mem/hy2.jpg
-    w: 410
-    h: 530
-
+    w: 451
+    h: 603
+  - img: images/mem/hy3.jpg
+    w: 670
+    h: 503
+  - img: images/mem/hy4.jpg
+    w: 516
+    h: 628
+    
 #配置你喜欢的顶部背景图片
 headimg:
   - item: /themes/violet/images/hdbg01.jpg
