@@ -31,9 +31,9 @@ comment: true
         </div>
     {% else %}
         {% if site.duoshuo.config %}
-        <!--<div class="comment-cnt">
-            <div class="ds-thread"></div>
-        </div>-->
+        <div class="comment-cnt">
+            <div class="ds-thread" data-thread-key="{{ site.duoshuo.id }}" data-title="{{ page.title }}" data-url="{{ page.url }}"></div>
+        </div>
         {% endif %}
     {% endif %}
 </div>
