@@ -28,7 +28,7 @@ body{background:#CCCCCC;}
         <div class="left"></div>
         <div class="right"></div>
         {% for mem in site.mem %}
-        <li style="background:url({{ mem.img }}); width:{{ mem.w }}px; height:{{ mem.h }}px;"></li>
+        <li style="background:url({{ mem.img }}); width:{{ mem.w | minus:15 }}px; height:{{ mem.h | minus:15 }}px;"></li>
         {% endfor %}
     </ul>
     <div class="bottom">

@@ -29,13 +29,13 @@ themes: /themes/violet
 #memory
 mem:
   - img: images/mem/hy.jpg
-    w: 572
+    w: 587
     h: 628
   - img: images/mem/hy1.jpg
-    w: 320
+    w: 335
     h: 539
   - img: images/mem/hy2.jpg
-    w: 395
+    w: 410
     h: 530
 
 #配置你喜欢的顶部背景图片
