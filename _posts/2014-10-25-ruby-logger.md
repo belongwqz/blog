@@ -46,3 +46,6 @@ description: 增强ruby日志类， 支持多输出。
     $logger = Logger.new(STDOUT)
 	$logger_file = File.join(Dir.pwd, 'result.log')
 	$logger.attach($logger_file)
+	$logger.error 'logge error'
+	$logger.warn 'logge warn'
+	$logger.info 'logge info'
