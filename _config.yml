@@ -47,6 +47,9 @@ mem:
   - img: images/mem/hy5.jpg
     w: 640
     h: 853
+  - img: images/mem/hy6.jpg
+    w: 640
+    h: 853
     
 #配置你喜欢的顶部背景图片
 headimg:
