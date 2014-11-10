@@ -78,7 +78,7 @@
     <script type="text/javascript">
         var headImgArr = [];
         {% for imgsrc in site.headimg %}
-            headImgArr.push("{{ site.baseurl }}{{ imgsrc.item }}");
+            headImgArr.push("{{ site.url }}{{ site.baseurl }}{{ imgsrc.item }}");
         {% endfor %}
         if(headImgArr.length <= 0) {
             headImgArr = ["{{ site.url }}{{ site.baseurl }}/themes/violet/images/hdbg03.jpg"];
