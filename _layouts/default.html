@@ -72,16 +72,16 @@
         </footer>
     </div>
 
-    <script type="text/javascript" src="{{ site.baseurl }}{{ site.themes }}/js/jquery-1.8.3.js"></script>
-    <script type="text/javascript" src="{{ site.baseurl }}{{ site.themes }}/js/jquery-scrollTo.js"></script>
-    <script type="text/javascript" src="{{ site.baseurl }}{{ site.themes }}/js/common.js"></script>
+    <script type="text/javascript" src="{{ site.url }}{{ site.baseurl }}{{ site.themes }}/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="{{ site.url }}{{ site.baseurl }}{{ site.themes }}/js/jquery-scrollTo.js"></script>
+    <script type="text/javascript" src="{{ site.url }}{{ site.baseurl }}{{ site.themes }}/js/common.js"></script>
     <script type="text/javascript">
         var headImgArr = [];
         {% for imgsrc in site.headimg %}
             headImgArr.push("{{ site.baseurl }}{{ imgsrc.item }}");
         {% endfor %}
         if(headImgArr.length <= 0) {
-            headImgArr = ["{{ site.baseurl }}/themes/violet/images/hdbg03.jpg"];
+            headImgArr = ["{{ site.url }}{{ site.baseurl }}/themes/violet/images/hdbg03.jpg"];
             var item = 0;
         } else {
             var item = Math.floor(Math.random() * (headImgArr.length));
