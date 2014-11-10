@@ -4,8 +4,7 @@ title: 增强ruby日志类
 description: 增强ruby日志类， 支持多输出。
 
 ---
-{% highlight ruby %}
-
+	{% highlight ruby %}
     class Logger
       # Creates or opens a secondary log file.
       def attach(name)
@@ -50,4 +49,4 @@ description: 增强ruby日志类， 支持多输出。
     $logger.error 'logge error'
     $logger.warn 'logge warn'
     $logger.info 'logge info'
-{% endhighlight %}
+	{% endhighlight %}
