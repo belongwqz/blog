@@ -1,16 +1,16 @@
 markdown: rdiscount
 highlighter: true
-plugins: ./blog/_plugins
+plugins: /_plugins
 paginate: 8
 
 safe: false
-baseurl: /blog
+baseurl: /
 #站点基础配置
 title: Beautiful
 subTitle: Something never changes, but something does.
 description: 简简单单
 url: http://belongwqz.github.io
-feed: /blog/atom.xml
+feed: /atom.xml
 
 #菜单配置
 nav:
