@@ -4,7 +4,7 @@ plugins: ./blog/_plugins
 paginate: 8
 
 safe: false
-baseurl: /
+baseurl: 
 #站点基础配置
 title: Beautiful
 subTitle: Something never changes, but something does.
