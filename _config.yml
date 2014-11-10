@@ -9,7 +9,8 @@ baseurl: /
 title: Beautiful
 subTitle: Something never changes, but something does.
 description: 简简单单
-url: http://belongwqz.github.io
+url: http://www.keepwalk.cn
+#url: http://belongwqz.github.io
 feed: /atom.xml
 
 #菜单配置
