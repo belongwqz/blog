@@ -183,12 +183,14 @@ class FileDiffInfo
   attr_reader :info
   attr_reader :diff_info
   attr_reader :file_bin_same
+  attr_reader :third_mode
 
-  def initialize(name, flag)
+  def initialize(name, flag, third=false)
     @file_name = name
     @file_flag = flag
     @diff_info = []
     @file_bin_same = false
+    @third_mode = third
     case flag
       when '='
         @info = '变更'
@@ -221,13 +223,15 @@ end
 class DirCompare
   attr_accessor :diff_info
 
-  def initialize(src_dir, des_dir, filter_keys=[], filter_types=[], right_file='fileProp.properties', def_data=[])
+  def initialize(src_dir, des_dir, filter_keys=[], filter_types=[], right_file='fileProp.properties', def_data=[], third_dir='')
     @src_dir_name = src_dir
     @des_dir_name = des_dir
     @right_file = right_file
     @def_data = def_data
+    @third_dir_name = third_dir
 
     @filter_keys = $filter_dir
+    @filter_conf_list = filter_keys
     @filter_keys.concat filter_keys
 
     @filter_types = $filter_file
@@ -252,6 +256,72 @@ class DirCompare
     false
   end
 
+  def get_file_diff_info(src_file, des_file, use_third=false)
+    res = nil
+    if src_file.to_s.ends_with? @right_file
+      $logger.info "file content diff not show right file [#{src_file}]"
+    else
+      $logger.info "[#{src_file}]<=>[#{des_file}] begin"
+      case File.extname(src_file).downcase
+        when '.xml'
+          res = get_xml_diff_info(src_file, des_file, use_third)
+        when '.properties'
+          res = get_properties_diff_info(src_file, des_file, use_third)
+        when '.ini'
+          res = get_ini_diff_info(src_file, des_file, use_third)
+        else
+          res = get_bin_diff_info(src_file, des_file, use_third)
+      end
+      #$logger.info "before #{res.to_s}"
+      #使用默认数据进行过滤
+      res.diff_info.reject! { |diff| is_def_data(File.basename(res.file_name), diff) } unless res.nil?
+      #$logger.info "after #{res.to_s}"
+      $logger.info "[#{src_file}]<=>[#{des_file}] end"
+    end
+    res
+  end
+
+  def get_third_diff_info
+    third_diff_infos = Array.new
+    $logger.info 'third_diff_infos begin make.'
+    if FileTest.exist? @third_dir_name and not @filter_conf_list.empty?
+      @filter_conf_list.each do |fn|
+        src_file = "#{@des_dir_name}#{fn}"
+        des_file = "#{@third_dir_name}#{fn}"
+        if FileTest.exist? src_file and FileTest.exist? des_file
+          $logger.info "find [#{fn}] at [#{src_file}]."
+          res = get_file_diff_info(src_file, des_file, true)
+          $logger.info "result is [#{res.to_s}]."
+          third_diff_infos.push res
+        else
+          src_file = "#{@des_dir_name}/media1#{fn}"
+          des_file = "#{@third_dir_name}/media1#{fn}"
+          if FileTest.exist? src_file and FileTest.exist? des_file
+            $logger.info "find [#{fn}] at [#{src_file}]."
+            res = get_file_diff_info(src_file, des_file, true)
+            $logger.info "result is [#{res.to_s}]."
+            third_diff_infos.push res
+          else
+            $logger.info "can not find [#{fn}] at media1."
+          end
+          src_file = "#{@des_dir_name}/media2#{fn}"
+          des_file = "#{@third_dir_name}/media2#{fn}"
+          if FileTest.exist? src_file and FileTest.exist? des_file
+            $logger.info "find [#{fn}] at [#{src_file}]."
+            res = get_file_diff_info(src_file, des_file, true)
+            $logger.info "result is [#{res.to_s}]."
+            third_diff_infos.push res
+          else
+            $logger.info "can not find [#{fn}]  at media2."
+          end
+        end
+      end
+    end
+    third_diff_infos.compact!
+    $logger.info "third_diff_infos is [#{third_diff_infos.to_s}]."
+    third_diff_infos
+  end
+
   #获取差异信息
   def get_diff_info
     diff_infos = Array.new
@@ -261,34 +331,11 @@ class DirCompare
     proc_count = 0
     calc_result.each do |info|
       proc_count += 1
-      $logger.info "process #{proc_count/total_count.to_f * 100}%, total_count=#{total_count}, proc_count=#{proc_count}"
+      $logger.info "process #{format('%0.2f',proc_count/total_count.to_f * 100)}%, total_count=#{total_count}, proc_count=#{proc_count}"
       case info[0]
         when '='
-          org_src_file = info[1]
-          src_file = org_src_file
-          des_file = info[2]
-          if org_src_file.to_s.ends_with? @right_file
-            $logger.info "file content diff not show right file [#{org_src_file}]"
-          else
-            $logger.info "[#{src_file}]<=>[#{des_file}] begin"
-            case File.extname(info[1]).downcase
-              when '.xml'
-                res = get_xml_diff_info(src_file, des_file)
-              when '.properties'
-                res = get_properties_diff_info(src_file, des_file)
-              when '.ini'
-                res = get_ini_diff_info(src_file, des_file)
-              else
-                res = get_bin_diff_info(src_file, des_file)
-            end
-            unless res.nil?
-              #使用默认数据进行过滤
-              res.diff_info.reject! { |diff| is_def_data(File.basename(res.file_name), diff) }
-              #当没有差异信息是不放入到结果中
-              (diff_infos.push res unless res.file_bin_same) unless res.diff_info.empty?
-            end
-            $logger.info "[#{info[1]}]<=>[#{info[2]}] end"
-          end
+          res = get_file_diff_info(info[1], info[2])
+          diff_infos.push res unless res.nil?
         when '-'
           src_file = info[1]
           diff_infos.push FileDiffInfo.new(src_file[@src_dir_name.size, src_file.size-@src_dir_name.size], '-')
@@ -303,6 +350,8 @@ class DirCompare
     end
 
     $logger.info "Compare dir between [#{@src_dir_name}] and [#{@des_dir_name}] end"
+    third_diff_info = get_third_diff_info
+    diff_infos.concat third_diff_info unless third_diff_info.empty?
     diff_infos
   end
 
@@ -354,10 +403,17 @@ class DirCompare
     false
   end
 
+  def get_show_name(full_name, use_third=false)
+    use_third ?
+        full_name[@third_dir_name.size, full_name.size-@third_dir_name.size] :
+        full_name[@des_dir_name.size, full_name.size-@des_dir_name.size]
+  end
+
   #获取xml差异信息
-  def get_xml_diff_info(src_xml, des_xml)
+  def get_xml_diff_info(src_xml, des_xml, use_third=false)
     file_name = File.basename(src_xml)
-    xml_diff = FileDiffInfo.new(des_xml[@des_dir_name.size, des_xml.size-@des_dir_name.size], '=')
+    xml_diff = FileDiffInfo.new(get_show_name(des_xml, use_third), '=', use_third)
+    use_bin_mode = false
     case file_name
       when 'cluster-common-conf.xml'
         HashCompare.new(MML.new(src_xml).hash, MML.new(des_xml).hash).show_info.each do |arr|
@@ -370,7 +426,8 @@ class DirCompare
           $logger.info arr.to_s
         end
       when 'global-conf.xml', 'flowControl.xml'
-        xml_diff = get_bin_diff_info(src_xml, des_xml)
+        use_bin_mode = true
+        xml_diff = get_bin_diff_info(src_xml, des_xml, use_third)
         #这几个文件较复杂，直接使用二进制方式比较
         $logger.info "[#{file_name}] use bin diff!"
       else
@@ -379,12 +436,13 @@ class DirCompare
           $logger.info arr.to_s
         end
     end
+    (xml_diff = nil if xml_diff.diff_info.empty?) unless use_bin_mode
     xml_diff
   end
 
   #获取properties文件比对信息
-  def get_properties_diff_info(src_pro, des_pro)
-    pro_diff = FileDiffInfo.new(des_pro[@des_dir_name.size, des_pro.size-@des_dir_name.size], '=')
+  def get_properties_diff_info(src_pro, des_pro, use_third=false)
+    pro_diff = FileDiffInfo.new(get_show_name(des_pro, use_third), '=', use_third)
     HashCompare.new(Property.new(src_pro).hash, Property.new(des_pro).hash).show_info.each do |arr|
       if src_pro.to_s.ends_with?(@right_file) && src_pro.to_s.ends_with?(@right_file)
         unless arr.any? { |ele| filter_file(ele) }
@@ -396,24 +454,27 @@ class DirCompare
         $logger.info arr.to_s
       end
     end
+    pro_diff = nil if pro_diff.diff_info.empty?
     pro_diff
   end
 
   #获取ini文件比对信息
-  def get_ini_diff_info(src_ini, des_ini)
-    ini_diff = FileDiffInfo.new(des_ini[@des_dir_name.size, des_ini.size-@des_dir_name.size], '=')
+  def get_ini_diff_info(src_ini, des_ini, use_third=false)
+    ini_diff = FileDiffInfo.new(get_show_name(des_ini, use_third), '=', use_third)
     HashCompare.new(Ini.new(src_ini).hash, Ini.new(des_ini).hash).show_info.each do |arr|
       ini_diff.add_diff_info arr
       $logger.info arr.to_s
     end
+    ini_diff = nil if ini_diff.diff_info.empty?
     ini_diff
   end
 
   #获取二进制文件比对信息
-  def get_bin_diff_info(src_bin, des_bin)
-    bin_diff = FileDiffInfo.new(des_bin[@des_dir_name.size, des_bin.size-@des_dir_name.size], '!')
+  def get_bin_diff_info(src_bin, des_bin, use_third=false)
+    bin_diff = FileDiffInfo.new(get_show_name(des_bin, use_third), '!', use_third)
     bin_diff.bin_same FileUtils.compare_file(src_bin.to_s.force_encoding('utf-8'), des_bin.to_s.force_encoding('utf-8'))
     $logger.info "[#{File.basename(src_bin).to_s}] cmp in binary mode, they are #{bin_diff.file_bin_same ? 'same' : 'not same'}"
+    bin_diff = nil if bin_diff.file_bin_same
     bin_diff
   end
 end
@@ -429,6 +490,10 @@ class Cfg
 
   def read
     open(@file_cfg) { |f| @param_map = YAML.load(f) } if File.exist? @file_cfg
+    #防止文件读取失败造成的异常
+    if @param_map.class.name != 'Hash'
+      @param_map = Hash.new
+    end
   end
 
   def save
@@ -547,10 +612,16 @@ class CmpUtils
     return result
   end
 
-  def self.export_to_excel(full_path, result_info, show_group=true, right_file='fileProp.properties', def_data=[])
+  def self.export_to_excel(full_path, result_info, show_group=true, right_file='fileProp.properties', def_data=[], ext_info=[])
     begin
       workbook = WriteExcel.new(full_path)
       format = workbook.add_format(:border => 2)
+      default_sheet= workbook.add_worksheet '说明'
+      ext_info.each_with_index do |info_arr, i|
+        info_arr.each_with_index do |info, j|
+          default_sheet.write(i, j, info, format)
+        end
+      end
       #format_merge = workbook.add_format(:border=>1, :bold=>1, :color=>'blue', :align=>'left', :valign=>'vcenter')
       file_diff_sheet= workbook.add_worksheet '文件变更'
       file_diff_row_index = 0
@@ -611,6 +682,9 @@ class CmpUtils
                         file_cont_add_diff_sheet.write(file_cont_add_diff_row_index, 3, get_group(info.file_name), format)
                       end
                     end
+                    if info.third_mode
+                      file_cont_add_diff_sheet.write(file_cont_add_diff_row_index, 4, '扩展', format)
+                    end
                     file_cont_add_diff_row_index += 1
                   when '-'
                     file_cont_rm_diff_sheet.write(file_cont_rm_diff_row_index, 0, info.file_name.to_s, format)
@@ -622,6 +696,9 @@ class CmpUtils
                       else
                         file_cont_rm_diff_sheet.write(file_cont_rm_diff_row_index, 3, get_group(info.file_name), format)
                       end
+                    end
+                    if info.third_mode
+                      file_cont_rm_diff_sheet.write(file_cont_rm_diff_row_index, 4, '扩展', format)
                     end
                     file_cont_rm_diff_row_index += 1
                   when '~'
@@ -636,6 +713,9 @@ class CmpUtils
                         file_cont_diff_sheet.write(file_cont_diff_row_index, 4, get_group(info.file_name), format)
                       end
                     end
+                    if info.third_mode
+                      file_cont_diff_sheet.write(file_cont_diff_row_index, 5, '扩展', format)
+                    end
                     file_cont_diff_row_index += 1
                   else
                     puts 'should not be here'
@@ -648,12 +728,18 @@ class CmpUtils
             if show_group
               file_diff_sheet.write(file_diff_row_index, 2, get_group(info.file_name), format)
             end
+            if info.third_mode
+              file_diff_sheet.write(file_diff_row_index, 3, '扩展', format)
+            end
             file_diff_row_index += 1
           when '!'
             file_diff_sheet.write(file_diff_row_index, 0, info.file_name.to_s, format)
             file_diff_sheet.write(file_diff_row_index, 1, info.info.to_s, format)
             if show_group
               file_diff_sheet.write(file_diff_row_index, 2, get_group(info.file_name), format)
+            end
+            if info.third_mode
+              file_diff_sheet.write(file_diff_row_index, 3, '扩展', format)
             end
             file_diff_row_index += 1
           else
