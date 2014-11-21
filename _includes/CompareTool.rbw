@@ -66,7 +66,10 @@ class MainFrame < Frame
     @def_data_file = ''
     @def_data = []
     @filter_file = ''
+    @use_filter_bool = false
+    @use_third_mode_bool = false
     @use_thread = false
+    @use_def_data_bool = false
     @cfg = Cfg.new
     @cfg.read
 
@@ -126,27 +129,33 @@ class MainFrame < Frame
 =end
 
     @use_filter = CheckBox.new(@panel, pos: [@xpos[3], @ypos[0]+4], label: '是否使用过滤文件')
+    @use_filter.set_value(@use_filter_bool)
     evt_checkbox(@use_filter.get_id) do |v|
       unless v.is_checked
         @filter_file_val.set_value ''
       end
+      @cfg.set('use_filter', @use_filter.get_value)
       @filter_btn.enable v.is_checked
     end
 
     @use_third_mode = CheckBox.new(@panel, pos: [@xpos[4], @ypos[0]+4], label: '是否使用扩展目录')
+    @use_third_mode.set_value(@use_third_mode_bool)
     evt_checkbox(@use_third_mode.get_id) do |v|
       unless v.is_checked
         @third_dir_val.set_value ''
       end
+      @cfg.set('use_third_mode', @use_third_mode.get_value)
       @third_dir_btn.enable v.is_checked
     end
 
     @use_def_data = CheckBox.new(@panel, pos: [@xpos[5], @ypos[0]+4], label: '是否使用默认数据')
+    @use_def_data.set_value(@use_def_data_bool)
     evt_checkbox(@use_def_data.get_id) do |v|
       unless v.is_checked
         @def_data_val.set_value ''
         @def_data.clear
       end
+      @cfg.set('use_def_data', @use_def_data.get_value)
       @def_val_btn.enable v.is_checked
     end
 
@@ -199,7 +208,16 @@ class MainFrame < Frame
     begin
       @src_dir = File.absolute_path(@cfg.get('src_dir'))
       @des_dir = File.absolute_path(@cfg.get('des_dir'))
-      @use_thread = @cfg.get('use_thread') == 'true'
+      #@use_thread = @cfg.get('use_thread')
+      @use_filter_bool = @cfg.get('use_filter')
+      @use_filter_bool = @use_filter_bool == 'NA' ? false : @use_filter_bool
+      @use_third_mode_bool = @cfg.get('use_third_mode')
+      @use_third_mode_bool = @use_third_mode_bool == 'NA' ? false : @use_third_mode_bool
+      @use_def_data_bool = @cfg.get('use_def_data')
+      @use_def_data_bool = @use_def_data_bool == 'NA' ? false : @use_def_data_bool
+      @filter_file = @use_filter_bool ? File.absolute_path(@cfg.get('filter_file')) : ''
+      @third_dir = @use_third_mode_bool ? File.absolute_path(@cfg.get('third_dir')) : ''
+      @def_data_file = @use_def_data_bool ? File.absolute_path(@cfg.get('def_data_file')) : ''
     rescue
       $logger.info 'load_param error.'
     end
@@ -216,7 +234,8 @@ class MainFrame < Frame
           return
         end
       end
-      CmpUtils.export_to_excel(file_name, @result_info, @show_group, @right_file, @def_data)
+      ext_info = [['基础目录', @base_dir_val.get_value],['比对目录', @target_dir_val.get_value],['扩展目录',@third_dir_val.get_value]]
+      CmpUtils.export_to_excel(file_name, @result_info, @show_group, @right_file, @def_data, ext_info)
     end
     @panel.enable true
   end
@@ -234,6 +253,8 @@ class MainFrame < Frame
       end
       if dlg.show_modal == ID_OK
         ctrl.set_value(File.absolute_path(dlg.get_path))
+        @cfg.set('def_data_file', File.absolute_path(@def_data_val.get_value))
+        @cfg.set('filter_file', File.absolute_path(@filter_file_val.get_value))
       end
     else
       dlg = DirDialog.new(self, message: '请选择目录', default_path: ctrl.get_value)
@@ -241,6 +262,7 @@ class MainFrame < Frame
         ctrl.set_value(File.absolute_path(dlg.get_path))
         @cfg.set('src_dir', File.absolute_path(@base_dir_val.get_value))
         @cfg.set('des_dir', File.absolute_path(@target_dir_val.get_value))
+        @cfg.set('third_dir', File.absolute_path(@third_dir_val.get_value))
       end
     end
   end
@@ -254,6 +276,7 @@ class MainFrame < Frame
   end
 
   def process(src, des)
+    @cfg.save
     unless @start_run
       @start_run = true
       @start_time = Time.new
@@ -263,7 +286,7 @@ class MainFrame < Frame
       filter_list = CmpUtils.read_filter @filter_file if @use_filter.is_checked && FileTest.exist?(@filter_file)
       @def_data_file = @def_data_val.get_value
       @def_data = CmpUtils.read_def_data @def_data_file if @use_def_data.is_checked && FileTest.exist?(@def_data_file)
-      @result_info = DirCompare.new(src, des, filter_list, [], @right_file, @def_data).get_diff_info
+      @result_info = DirCompare.new(src, des, filter_list, [], @right_file, @def_data, @third_dir_val.get_value).get_diff_info
       @end_time = Time.new
       message "耗时[#{(@end_time-@start_time).to_s}]秒"
       $logger.info "The task take[#{(@end_time-@start_time).to_s}] seconds."
@@ -306,7 +329,7 @@ end
 
 #noinspection RubyArgCount
 if __FILE__ == $0
-  if true
+  if false
     src_xml = 'F:\version\9.3\diff\8.1-9.0\test_base\sfp.xml'
     des_xml = 'F:\version\9.3\diff\8.1-9.0\test_new\sfp.xml'
     puts SFPCmp.new(src_xml, des_xml).get_hashs.to_s
