@@ -9,11 +9,11 @@ isIndex: true
 {% for rpost in paginator.posts %}
 <article class="main-article">
     <div class="violet-post">
-        <h3 class="main-article-title"><a href="{{ site.url }}{{ site.baseurl }}{{ rpost.url }}" title="{{ rpost.title }}" rel="bookmark">{{ rpost.title }}</a></h3>
+        <h3 class="main-article-title"><a href="{{ site.url }}{{ site.baseurl }}{{ rpost.url }}#disqus_thread" title="{{ rpost.title }}" rel="bookmark">{{ rpost.title }}</a></h3>
         <p class="main-article-meta"><time pubdate="{{ rpost.date | date_to_utc | date: '%Y-%m-%d' }}">{{ rpost.date | date_to_utc | date: "%Y-%m-%d" }}</time></p>
         <div class="main-article-contant">
             <p>{{ rpost.description }}</p>
-            <p class="main-article-more"><a href="{{ site.url }}{{ site.baseurl }}{{ rpost.url }}" title="Read More" rel="nofollow">进入查看</a></p>
+            <p class="main-article-more"><a href="{{ site.url }}{{ site.baseurl }}{{ rpost.url }}#disqus_thread" title="Read More" rel="nofollow">进入查看</a></p>
         </div>
     </div>
 </article>
