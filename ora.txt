@@ -1,0 +1,92 @@
+SELECT A.FILE_ID "FILE_NO",A.TABLESPACE_NAME "TABLESPACE_NAME",A.BYTES/1000/1000 "CURRENT_SIZE(M)",(A.BYTES-SUM(NVL(B.BYTES,0)))/1000/1000 "USED(M)",SUM(NVL(B.BYTES,0))/1000/1000 "FREE(M)",(A.BYTES-SUM(NVL(B.BYTES,0)))/A.BYTES*100 "USED(%)",A.FILE_NAME "FILE_PATH" FROM DBA_DATA_FILES A, DBA_FREE_SPACE B WHERE A.FILE_ID = B .FILE_ID(+) GROUP BY A.TABLESPACE_NAME, A.FILE_ID,A.BYTES,A.FILE_NAME ORDER BY A.BYTES DESC;
+
+SELECT A.FILE_ID "FILE_NO",A.TABLESPACE_NAME "TABLESPACE_NAME",TO_CHAR(A.BYTES/1000/1000,'FM99999999.999') "CURRENT_SIZE(M)",TO_CHAR((A.BYTES-SUM(NVL(B.BYTES,0)))/1000/1000,'FM99999999.999') "USED(M)",TO_CHAR(SUM(NVL(B.BYTES,0))/1000/1000 ,'FM99999999.999')"FREE(M)",TO_CHAR((A.BYTES-SUM(NVL(B.BYTES,0)))/A.BYTES*100,'FM99.999') "USED(%)",A.FILE_NAME "FILE_PATH" FROM DBA_DATA_FILES A, DBA_FREE_SPACE B WHERE A.FILE_ID = B .FILE_ID(+) GROUP BY A.TABLESPACE_NAME, A.FILE_ID,A.BYTES,A.FILE_NAME ORDER BY A.BYTES DESC;
+
+查询占空间前20的信息：
+SELECT * FROM (SELECT SEGMENT_NAME,OWNER,SUM(BYTES)/1024/1024 "SUM(M)" FROM DBA_EXTENTS GROUP BY SEGMENT_NAME,OWNER ORDER BY SUM(BYTES)/1024/1024 DESC) WHERE ROWNUM <= 20;
+SELECT * FROM (SELECT SEGMENT_NAME,OWNER,SEGMENT_TYPE,TABLESPACE_NAME,SUM(BYTES)/1024/1024 FROM DBA_EXTENTS GROUP BY SEGMENT_NAME,OWNER,SEGMENT_TYPE,TABLESPACE_NAME ORDER BY SUM(BYTES)/1024/1024 DESC) WHERE ROWNUM <= 20;
+
+缩小dbf大小（不一定行）：
+ALTER DATABASE DATAFILE '/opt/oracle/oradb/11g/oradata/ora11g/mediaxUsr.dbf' RESIZE 20480M;
+
+查看数据库状态：
+SELECT DATABASE_ROLE FROM V$DATABASE;
+SELECT SWITCHOVER_STATUS FROM V$DATABASE;
+SELECT OPEN_MODE FROM V$DATABASE;
+
+查看DG状态：
+select status from v$managed_standby where process like 'LGWR%';
+select status from v$managed_standby where process like 'MRP0%';
+select * from v$archive_gap;
+
+watch:
+select process,status,group#,thread#,sequence#,block#,blocks from v$managed_standby;
+select protection_mode,protection_level,database_role,open_mode,SWITCHOVER_STATUS,current_scn,to_char(STANDBY_BECAME_PRIMARY_SCN) from v$database;
+SELECT OLDEST_FLASHBACK_SCN, OLDEST_FLASHBACK_TIME FROM V$FLASHBACK_DATABASE_LOG;
+
+DELETE ARCHIVELOG ALL COMPLETED BEFORE 'SYSDATE-7';
+
+rman
+RMAN> connect target /
+RMAN> crosscheck archivelog all;
+RMAN> delete noprompt expired archivelog all;
+RMAN> delete noprompt force archivelog until time 'sysdate -2';
+RMAN>exit
+
+delete archivelog all
+
+查看数据存放位置：
+SELECT TABLESPACE_NAME, BYTES/1024/1024 FILE_SIZE_MB, FILE_NAME FROM DBA_DATA_FILES;
+
+create user name identified by pwd default tablespace mediaxUsr;
+drop user name cascade;
+
+手动拉MRP0进程:
+alter database recover managed standby database using current logfile disconnect from session;
+
+查看字符集：
+select userenv('language') from dual;
+select * from nls_database_parameters where parameter ='NLS_CHARACTERSET';
+
+需要设置set serveroutput on才能将output的内容显示出来
+
+
+select su.username, session_num,su.tablespace, su.contents, su.segtype, su.segfile#, su.segblk#, su.extents, su.blocks, sq.sql_fulltext, sq.first_load_time, sq.plsql_exec_time from v$sort_usage su, v$sql sq where su.sqladdr = sq.address;
+
+来自 <http://www.itpub.net/thread-1451411-1-1.html> 
+
+1.查看总消耗时间最多的前10条SQL语句
+select *
+from (select v.sql_id,
+v.child_number,
+v.sql_text,
+v.elapsed_time,
+v.cpu_time,
+v.disk_reads,
+rank() over(order by v.elapsed_time desc) elapsed_rank
+from v$sql v) a
+where elapsed_rank <= 10;
+
+2.查看CPU消耗时间最多的前10条SQL语句
+select *
+from (select v.sql_id,
+v.child_number,
+v.sql_text,
+v.elapsed_time,
+v.cpu_time,
+v.disk_reads,
+rank() over(order by v.cpu_time desc) elapsed_rank
+from v$sql v) a
+where elapsed_rank <= 10;
+
+3.查看消耗磁盘读取最多的前10条SQL语句
+select *
+from (select v.sql_id,
+v.child_number,
+v.sql_text,
+v.elapsed_time,
+v.cpu_time,
+v.disk_reads,
+rank() over(order by v.disk_reads desc) elapsed_rank
+from v$sql v) a
+where elapsed_rank <= 10;
