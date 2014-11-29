@@ -4,6 +4,7 @@ title: 联系方式
 description: 简简单单，平平淡淡。
 keywords: wqz
 isContact: true
+comment: true
 ---
 
 <article class="main-article main-article-page">
@@ -18,3 +19,16 @@ isContact: true
         </div>
     </div>
 </article>
+<div class="comment">
+    {% if site.disqus.config %}
+        <div class="comment-cnt">
+            <div id="disqus_thread"></div>
+        </div>
+    {% else %}
+        {% if site.duoshuo.config %}
+        <div class="comment-cnt">
+            <div class="ds-thread" data-thread-key="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-count-type="comments"></div>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
