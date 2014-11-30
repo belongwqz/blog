@@ -46,3 +46,16 @@ comment: true
 <p>中国象棋</p>
 </div>
 </div>
+<div class="comment">
+    {% if site.disqus.config %}
+        <div class="comment-cnt">
+            <div id="disqus_thread"></div>
+        </div>
+    {% else %}
+        {% if site.duoshuo.config %}
+        <div class="comment-cnt">
+            <div class="ds-thread" data-thread-key="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-count-type="comments"></div>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
