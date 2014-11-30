@@ -10,6 +10,7 @@ title: Beautiful
 subTitle: Something never changes, but something does.
 description: 简简单单
 url: http://www.keepwalk.cn
+#url: http://127.0.0.1:4000
 #url: http://belongwqz.github.io
 feed: /atom.xml
 
@@ -21,6 +22,8 @@ nav:
     url: /archives.html
   - text: 记忆
     url: /memory.html
+  - text: 休闲娱乐
+    url: /amusement/xiangqi/index.html
   - text: 联系我
     url: /contact.html
 
