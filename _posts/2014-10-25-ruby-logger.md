@@ -7,7 +7,7 @@ description: 增强ruby日志类， 支持多输出。
 
 #ruby增强型日志封装。
 
-{% highlight ruby %}
+{% highlight ruby linenos %}
 class Logger
   # Creates or opens a secondary log file.
   def attach(name)
