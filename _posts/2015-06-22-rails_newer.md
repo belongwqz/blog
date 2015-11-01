@@ -32,7 +32,7 @@ description: 任何东西的的学习基本上都是先有兴趣，然后瓶颈�
 # 2. 安装 #
 
     gem update --system
-    rails update --no-ri --no-rdoc
+    gem update --no-ri --no-rdoc
     gem install rails --no-ri --no-rdoc
     for %i in (
     rails-i18n
