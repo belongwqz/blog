@@ -2,6 +2,7 @@ markdown: rdiscount
 highlighter: pygments
 plugins: /_plugins
 paginate: 8
+gems: [jekyll-paginate]
 
 safe: false
 baseurl: ""
@@ -10,7 +11,7 @@ title: Beautiful
 subTitle: Something never changes, but something does.
 description: 简简单单
 url: http://www.keepwalk.cn
-#url: http://127.0.0.1:4000
+#url: http://127.0.0.1
 #url: http://belongwqz.github.io
 feed: /atom.xml
 
