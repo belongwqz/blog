@@ -7,7 +7,9 @@ description: kafka reblance或指定topic到自定义broker列表步骤。
 
 
 1、生成move.json，用户生成迁移信息，示例：
+{% highlight json linenos %}
 {"topics": [{"topic": "TOPIC名称"}], "version":1}
+{% endhighlight %}
 
 2、生成迁移建议，将“Proposed partition reassignment configuration”后的内容写入reassign.json，根据需要进行修改，样例：
 {"version":1,"partitions":[{"topic":"TOPIC_NAME","partition":0,"replicas":[1, 2]},{"topic":"TOPIC_NAME","partition":3,"replicas":[1, 2]},{"topic":"TOPIC_NAME","partition":2,"replicas":[1, 2]},{"topic":"TOPIC_NAME","partition":1,"replicas":[1, 2]}]}
