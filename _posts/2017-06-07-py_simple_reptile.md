@@ -7,7 +7,7 @@ description: 简单的python爬虫。
 
 #ruby增强型日志封装。
 
-{% highlight python linenos %}
+{% highlight python %}
 # -*- coding: utf-8 -*-
 import os
 import time
