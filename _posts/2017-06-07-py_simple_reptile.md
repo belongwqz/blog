@@ -5,7 +5,7 @@ description: 简单的python爬虫。
 
 ---
 
-#简单的python爬虫。
+#简单的python爬虫，python3.6+，使用协程。
 
 {% highlight python %}
 # -*- coding: utf-8 -*-
