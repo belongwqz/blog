@@ -5,7 +5,7 @@ description: 简单的python爬虫。
 
 ---
 
-#ruby增强型日志封装。
+#简单的python爬虫。
 
 {% highlight python %}
 # -*- coding: utf-8 -*-
