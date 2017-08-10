@@ -96,3 +96,7 @@ disqus:
 duoshuo:
   config: false
   id: belongwqz
+
+uyan:
+  config: true
+  id: 1990086
