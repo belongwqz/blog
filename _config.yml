@@ -90,9 +90,9 @@ author:
 
 #评论信息
 disqus:
-  config: false
+  config: true
   id: belongwqz
 
 duoshuo:
-  config: true
+  config: false
   id: belongwqz
