@@ -1,5 +1,5 @@
 markdown: rdiscount
-highlighter: pygments
+highlighter: rouge
 plugins_dir: /_plugins
 paginate: 8
 gems: [jekyll-paginate]
