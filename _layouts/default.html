@@ -99,6 +99,7 @@
             "background-image": "url(" + headImgArr[item] + ")"
         });
     </script>
+	{{ page.comment }}
     {% if page.comment %}
         {% if site.disqus.config %}
         <script type="text/javascript">
@@ -115,7 +116,6 @@
         </script>
 	{% endif %}
         {% if site.duoshuo.config %}
-            {% if site.duoshuo.config %}
             <script type="text/javascript">
                 var duoshuoQuery = {short_name:"{{ site.duoshuo.id }}"};
                 (function() {
@@ -127,7 +127,6 @@
                     || document.getElementsByTagName('body')[0]).appendChild(ds);
                 })();
             </script>
-            {% endif %}
         {% endif %}
 	{% if site.uyan.config %}
 		<!-- UY BEGIN -->
