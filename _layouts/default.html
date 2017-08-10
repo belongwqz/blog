@@ -113,7 +113,8 @@
                 //(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
             })();
         </script>
-        {% else %}
+	{% endif %}
+        {% if side.duoshuo.config %}
             {% if site.duoshuo.config %}
             <script type="text/javascript">
                 var duoshuoQuery = {short_name:"{{ site.duoshuo.id }}"};
