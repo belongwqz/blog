@@ -29,11 +29,16 @@ comment: true
         <div class="comment-cnt">
             <div id="disqus_thread"></div>
         </div>
-    {% else %}
-        {% if site.duoshuo.config %}
-        <div class="comment-cnt">
-            <div class="ds-thread" data-thread-key="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-count-type="comments"></div>
-        </div>
-        {% endif %}
     {% endif %}
+    {% if site.duoshuo.config %}
+    <div class="comment-cnt">
+        <div class="ds-thread" data-thread-key="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-title="{{ page.title }}" data-url="{{ site.url }}{{ site.baseurl }}{{ page.url }}" data-count-type="comments"></div>
+    </div>
+    {% endif %}
+    {% if site.uyan.config %}
+		<!-- UY BEGIN -->
+		<div id="uyan_frame"></div>
+		<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid={{ site.uyan.id }}"></script>
+		<!-- UY END -->
+	{% endif %}
 </div>
